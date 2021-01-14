@@ -23,5 +23,18 @@ export const add  = ({ name, sex, cid, type, time, temp }) => {
 }
 
 // 修改
+export const update = ({ _id, name, sex, cid, type, time, temp }) => service({
+  url: API.MANAGEMENT_API,
+  method: 'PUT',
+  data: {
+    _id, name, sex, cid, type, time, temp
+  }
+})
 
 // 删除
+export const remove = _id => {
+  return service({
+    url: API.MANAGEMENT_API + '/' + _id,
+    method: "DELETE",
+  })
+}
