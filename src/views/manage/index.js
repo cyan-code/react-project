@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import XLSX from 'xlsx'
 import CustomTable from './custom'
 import { find, add, update, remove } from '../../api/manage'
 // 引入modal框
@@ -36,6 +37,43 @@ export default class Manage extends Component {
     })
   }
 
+  exportFileHandler = () => {
+    // 创建一个二维数组，以符合这个插件转换成excel的数据源结构要求
+    // 要求就是二维数组，每个子数组代表一行 e.g.[[行1],[行2],...[行n]]
+    const exportData = [
+      ['primary key', 'name', 'sex', 'cid', 'type', 'time', 'temp', 'version'],
+      ...this.state.data.map(item => Object.values(item))
+    ]
+    // 把state转换为工作簿
+    const ws = XLSX.utils.aoa_to_sheet(exportData)
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, 'SheetJS')
+    // 生成XLSX文件并发送到客户端
+    XLSX.writeFile(wb, "sheetjs.xlsx")
+  }
+
+  exportFileAllHandler = async () => {
+    // 打印全部
+    let temp = []
+    const totalPage = Math.ceil(this.state.total / this.state.pageSize)
+    for (let i = 1; i <= totalPage; i++) {
+      const res = await find(i, this.state.pageSize)
+      temp.push(...res.list)
+    }
+    temp = temp.map(item => Object.values(item))
+    let exportData = [
+      ['primary key', 'name', 'sex', 'cid', 'type', 'time', 'temp', 'version'],
+      ...temp
+    ]
+
+    // 把state转换为工作簿
+    const ws = XLSX.utils.aoa_to_sheet(exportData)
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, 'SheetJS')
+    // 生成XLSX文件并发送到客户端
+    XLSX.writeFile(wb, "sheetjs.xlsx")
+  }
+
   render() {
     return (
       <div>
@@ -62,9 +100,15 @@ export default class Manage extends Component {
             })
           }}
           onDelete ={ _id => {
-            remove(_id)
+            remove(_id) 
             this.findByPage(this.state.page, this.state.pageSize)
           }}
+          onExport = { // 导出excel文件
+            () => { this.exportFileHandler() }
+          }
+          onExportAll = {
+            () => { this.exportFileAllHandler() }
+          }
         />
         {/* 对话框 */}
         <CustomModal 

@@ -83,7 +83,8 @@ const CustomTable = props => {
           <div>
             <Space size="small">
               <Button type="primary" onClick={ props.onAdd }>新增</Button>
-              <Button>导出</Button>
+              <Button onClick={ props.onExport }>导出本页</Button>
+              <Button onClick={ props.onExportAll }>导出全部</Button>
             </Space>
           </div>
         </div>)
