@@ -25,6 +25,7 @@ const editorRef = useRef()
 useEffect(() => {
   // 创建 Editor 对象
   // const richTextEditor = new E(document.getElementById('profile-editor')
+  // eslint-disable-next-line
   richTextEditor = new E(editorRef.current)
   richTextEditor.create()
 }, [])

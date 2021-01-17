@@ -14,4 +14,15 @@ module.exports = {
       },
     },
   ],
+  devServer: {
+    proxy: {
+      '/tencent':{
+        target: 'https://view.inews.qq.com/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/tencent': ''
+        }
+      }
+    }
+  }
 };
